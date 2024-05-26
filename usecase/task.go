@@ -1,14 +1,13 @@
 package usecase
 
 import (
-	"fmt"
-
+	"github.com/radish-miyazaki/echo-task-api/model"
 	"github.com/radish-miyazaki/echo-task-api/repository"
 )
 
 type TaskUsecase interface {
-	Create(title string) error
-	Get(id int) (*repository.Task, error)
+	Create(title string) (int, error)
+	Get(id int) (*model.Task, error)
 	Update(id int, title string) error
 	Delete(id int) error
 }
@@ -21,20 +20,27 @@ func NewTaskUsecase(r repository.TaskRepository) TaskUsecase {
 	return &taskUseCase{r}
 }
 
-func (u *taskUseCase) Create(title string) error {
-	task := repository.Task{Title: title}
-	id, err := u.r.Create(&task)
-	fmt.Println(id)
+func (u *taskUseCase) Create(title string) (int, error) {
+	task := model.Task{Title: title}
+	if err := task.Validate(); err != nil {
+		return 0, err
+	}
 
-	return err
+	id, err := u.r.Create(&task)
+
+	return id, err
 }
 
-func (u *taskUseCase) Get(id int) (*repository.Task, error) {
+func (u *taskUseCase) Get(id int) (*model.Task, error) {
 	return u.r.Read(id)
 }
 
 func (u *taskUseCase) Update(id int, title string) error {
-	task := repository.Task{ID: id, Title: title}
+	task := model.Task{ID: id, Title: title}
+	if err := task.Validate(); err != nil {
+		return err
+	}
+
 	err := u.r.Update(&task)
 	return err
 }
