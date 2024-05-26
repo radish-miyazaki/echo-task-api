@@ -13,11 +13,11 @@ type Task struct {
 
 type TaskController struct{}
 
-func (t *TaskController) GetTasks(c echo.Context) error {
-	return c.JSON(http.StatusOK, "get all tasks")
+func (t *TaskController) List(c echo.Context) error {
+	return c.JSON(http.StatusOK, "get task")
 }
 
-func (t *TaskController) CreateTask(c echo.Context) error {
+func (t *TaskController) Create(c echo.Context) error {
 	var task Task
 	if err := c.Bind(&task); err != nil {
 		return c.JSON(http.StatusBadRequest, err)

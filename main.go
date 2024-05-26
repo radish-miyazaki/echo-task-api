@@ -15,7 +15,7 @@ func initDB() (*sql.DB, error) {
 }
 
 func main() {
-	db, err := initDB()
+	_, err := initDB()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,8 +27,8 @@ func main() {
 
 	taskController := controller.TaskController{}
 
-	e.GET("/tasks", taskController.GetTasks)
-	e.POST("/tasks", taskController.CreateTask)
+	e.GET("/tasks", taskController.List)
+	e.POST("/tasks", taskController.Create)
 
 	e.Start(":8080")
 }
