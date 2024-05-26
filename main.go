@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/radish-miyazaki/echo-task-api/controller"
 )
 
 func main() {
@@ -13,15 +12,10 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.GET("/tasks", func(c echo.Context) error {
-		fmt.Println("get all tasks")
-		return c.String(200, "get all tasks")
-	})
+	taskController := controller.TaskController{}
 
-	e.POST("/tasks", func(c echo.Context) error {
-		fmt.Println("create a task")
-		return c.String(200, "create a task")
-	})
+	e.GET("/tasks", taskController.GetTasks)
+	e.POST("/tasks", taskController.CreateTask)
 
 	e.Start(":8080")
 }
